@@ -1,6 +1,8 @@
+import { invoke } from '@tauri-apps/api/tauri'
+import store from '@/store'
+
 export type PortType = 'inlet' | 'outlet' | 'in-interface' | 'out-interface'
 export type PortStatus = 'idle' | 'waiting' | 'loading' | 'unloading' | 'full' | 'empty'
-import store from '@/store'
 
 export class PortDevice {
   public id: number
@@ -24,118 +26,37 @@ export class PortDevice {
   }
 
   // 添加任务（物料ID）
-  public addTask(materialId: number) {
-    this.taskQueue.push(materialId)
-    if (!this.currentMaterialId && this.isAvailable()) {
-      this.currentMaterialId = this.taskQueue.shift() || null
-      this.hasCargo = true
-      this.status = 'full'
-    } else if (!this.currentMaterialId && this.isAvailable()) {
-      this.startNextTask()
-    }
-  }
-
-  // 开始下一个任务
-  private startNextTask() {
-    if (this.taskQueue.length === 0 || !this.isAvailable()) return
-    this.currentMaterialId = this.taskQueue.shift() || null
-    if (this.type === 'inlet') this.startOperation('loading', 30)
-    else if (this.type === 'out-interface') this.startOperation('loading', 50)
-    else if (this.type === 'in-interface' && this.status === 'idle')
-      this.startOperation('unloading', 25)
-    else if (this.type === 'outlet' && this.status === 'idle') this.startOperation('unloading', 30)
+  public async addTask(materialId: number) {
+    return await invoke('port_add_task', { id: this.id, materialId })
   }
 
   // 更新设备状态
-  public update(deltaTime: number) {
-    if (this.timer > 0) {
-      this.timer -= deltaTime
-      if (this.timer <= 0) {
-        this.timer = 0
-        this.finishOperation()
-      }
-    }
-  }
-
-  private finishOperation() {
-    if ((this.type === 'out-interface' || this.type === 'inlet') && this.status === 'loading') {
-      this.hasCargo = true
-      store.commit('addDeviceChangeStatus', {
-        devicename: this.type === 'out-interface' ? '出库接口' : '入库口',
-        deviceId: this.id.toString(),
-        materialId: this.currentMaterialId?.toString() || '',
-        status: '无货->有货',
-        timestamp: Math.round(this.scheduler?.getTime() || 0),
-      })
-      this.status = 'full'
-    }
-    if ((this.type === 'outlet' || this.type === 'in-interface') && this.status === 'unloading') {
-      this.hasCargo = false
-      this.status = 'idle'
-      this.scheduler?.completeTask(this.currentMaterialId, true)
-      store.commit('addDeviceChangeStatus', {
-        devicename: this.type === 'outlet' ? '出库口' : '入库接口',
-        deviceId: this.id.toString(),
-        materialId: this.currentMaterialId?.toString() || '',
-        status: '无货->有货',
-        timestamp: Math.round(this.scheduler?.getTime() || 0),
-      })
-      this.currentMaterialId = null
-      this.startNextTask()
-    }
-    // 装货完成，等待小车取走
+  public async update(deltaTime: number) {
+    return await invoke('port_update', { id: this.id, deltaTime })
   }
 
   // 小车取走物料时调用
-  public onMaterialTaken() {
-    if (this.hasCargo && (this.type === 'out-interface' || this.type === 'inlet')) {
-      this.hasCargo = false
-      this.status = 'idle'
-      store.commit('addDeviceChangeStatus', {
-        devicename: this.type === 'out-interface' ? '出库接口' : '入库口',
-        deviceId: this.id.toString(),
-        materialId: this.currentMaterialId?.toString() || '',
-        status: '有货->无货',
-        timestamp: Math.round(this.scheduler?.getTime() || 0),
-      })
-
-      this.currentMaterialId = null
-      this.startNextTask()
-    }
+  public async onMaterialTaken() {
+    return await invoke('port_on_material_taken', { id: this.id })
   }
 
   // 小车放上物料时调用
-  public onMaterialPlaced(materialId: number) {
-    if (!this.hasCargo && (this.type === 'outlet' || this.type === 'in-interface')) {
-      this.hasCargo = true
-      this.status = 'full'
-      this.currentMaterialId = materialId
-      store.commit('addDeviceChangeStatus', {
-        devicename: this.type === 'outlet' ? '出库口' : '入库接口',
-        deviceId: this.id.toString(),
-        materialId: this.currentMaterialId?.toString() || '',
-        status: '无货->有货',
-        timestamp: Math.round(this.scheduler?.getTime() || 0),
-      })
-      if (this.type === 'in-interface') this.startOperation('unloading', 25)
-      else if (this.type === 'outlet') this.startOperation('unloading', 30)
-    }
+  public async onMaterialPlaced(materialId: number) {
+    return await invoke('port_on_material_placed', { id: this.id, materialId })
   }
 
-  public startOperation(status: PortStatus, duration: number) {
-    if (this.timer > 0) return
-    this.status = status
-    this.timer = duration
+  public async startOperation(status: PortStatus, duration: number) {
+    return await invoke('port_start_operation', { id: this.id, status, duration })
   }
 
-  public isBusy(): boolean {
-    return this.timer > 0
+  public async isBusy(): Promise<boolean> {
+    return await invoke('port_is_busy', { id: this.id })
   }
-  public getMaterialId(): number | null {
-    return this.currentMaterialId
+  public async getMaterialId(): Promise<number | null> {
+    return await invoke('port_get_material_id', { id: this.id })
   }
-  public isAvailable(): boolean {
-    return !this.isBusy() && (this.status === 'idle' || this.status === 'empty')
+  public async isAvailable(): Promise<boolean> {
+    return await invoke('port_is_available', { id: this.id })
   }
 }
 

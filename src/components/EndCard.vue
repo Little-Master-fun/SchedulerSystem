@@ -95,30 +95,6 @@ const writeTaskDetailsToFile = async () => {
 };
 
 writeTaskDetailsToFile();
-
-// const createDirectory = async () => {
-//   try {
-//     const now = new Date();
-//     const dirName = `SchedulerData/${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}`;
-//     await mkdir(dirName, { baseDir: BaseDirectory.Desktop, recursive: true })
-//     console.log('Directory created successfully')
-//     createFile(now)
-//   } catch (error) {
-//     console.error('Error creating directory:', error)
-//   }
-// }
-
-// const createFile = async (now) => {
-//   try {
-//     const file = await create(`SchedulerData/${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}/bar.txt`, { baseDir: BaseDirectory.Desktop })
-//     await file.write(new TextEncoder().encode('Hello world'))
-//     await file.close()
-//     console.log('File created successfully')
-//   } catch (error) {
-//     console.error('Error creating file:', error)
-//   }
-// }
-
 const backToHome = () => {
   store.commit('resetState')
   router.push('/')

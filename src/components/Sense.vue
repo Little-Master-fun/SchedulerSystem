@@ -44,10 +44,7 @@ import Track from './tres/Track.vue'
 import Station from './tres/Station.vue'
 import EndCard from './EndCard.vue'
 
-
-// 
 const addCarSpeedTable = (value: any) => store.commit('addCarSpeedTable', value)
-
 //轨道设置函数
 const trackPoints = inittrackocar()
 const carCount = computed(() => store.state.carCount)
@@ -56,7 +53,6 @@ const taskCount = computed(() => store.state.task)
 // 获取任务和设备信息
 const tasklist = computed(() => store.getters.testList)
 const deviceMap = getDeviceMap()
-
 const setDeviceMap = (value: any) => store.commit('setDeviceMap', value)
 const isTaskOver = ref(false)
 const controller = computed(() => {

@@ -20,11 +20,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { getDeviceStatusById, getDeviceMap } from '@/utils/scheduler1.0/PortDevice'
-
-
-
 const props = defineProps({
   id: {
     type: Number,

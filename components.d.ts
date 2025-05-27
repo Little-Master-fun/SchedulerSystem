@@ -37,3 +37,4 @@ declare module 'vue' {
     Track: typeof import('./src/components/tres/Track.vue')['default']
   }
 }
+declare module '@tauri-apps/api/tauri' 

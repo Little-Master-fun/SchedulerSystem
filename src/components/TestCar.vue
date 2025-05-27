@@ -24,25 +24,7 @@
                 <el-form-item label="小车数量">
                   <el-input v-model="carCount" type="number" min="1" placeholder="请输入小车数量" />
                 </el-form-item>
-                <div v-for="(item, index) in tastList" :key="index">
-                  <p>任务{{ index + 1 }}</p>
-                  <el-form-item label="任务类型">
-                    <el-radio-group v-model="item.type" aria-label="label position">
-                      <el-radio-button value="出库">出库</el-radio-button>
-                      <el-radio-button value="入库">入库</el-radio-button>
-                    </el-radio-group>
-                  </el-form-item>
-                  <el-form-item label="物料ID">
-                    <el-input v-model="item.materialId" placeholder="Material ID" />
-                  </el-form-item>
-                  <el-form-item label="起始设备">
-                    <el-input v-model="item.fromDevice" placeholder="From Device" type="number" />
-                  </el-form-item>
-                  <el-form-item label="目标设备">
-                    <el-input v-model="item.toDevice" placeholder="To Device" type="number" />
-                  </el-form-item>
-                </div>
-              </el-form>
+、              </el-form>
             </div>
           </el-scrollbar>
           <div class="flex justify-between items-center w-[70%] mb-4">
