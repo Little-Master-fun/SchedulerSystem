@@ -1,33 +1,54 @@
-# autoCar2.0
+# ma-ya-ma
 
-This template should help get you started developing with Vue 3 in Vite.
+C++ 大作业
 
-## Recommended IDE Setup
+Github Repo: [lnkkerst/ma-ya-ma-tauri](https://github.com/lnkkerst/ma-ya-ma-tauri)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Release
 
-## Type Support for `.vue` Imports in TS
+可在 [release](https://github.com/lnkkerst/ma-ya-ma-tauri/releases) 页面找到已经构建出来的版本。
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## 构建
 
-## Customize configuration
+请先确保满足[此处](https://tauri.app/v1/guides/getting-started/prerequisites)的要求。
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+以及安装好 [pnpm](https://pnpm.io/installation)。
 
-## Project Setup
-
-```sh
-pnpm install
+```bash
+# 克隆代码
+git clone https://github.com/lnkkerst/ma-ya-ma-tauri.git && cd ma-ya-ma-tauri
+# 安装依赖
+pnpm i
 ```
 
-### Compile and Hot-Reload for Development
+### 使用 CMake
 
-```sh
-pnpm dev
+需要事先安装好 CMake。
+
+还有 cxxbridge。
+
+```bash
+cargo install --force cxxbridge-cmd
 ```
 
-### Type-Check, Compile and Minify for Production
+仅在 Linux(Arch distro) 上测试过，其它平台大概率失败。
 
-```sh
-pnpm build
+构建：
+
+```bash
+mkdir build-release && cd build-release
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build . --config Release
 ```
+
+生成的产物（可执行二进制文件）为 `ma-ya-ma[.exe]`。
+
+### 使用 Cargo
+
+Windows 10, Linux(Ubuntu 18.04, Arch), macOS(M1, amd64) 下测试成功。
+
+```bash
+pnpm run build
+```
+
+生成的产物在 `src-tauri/target` 目录下。
