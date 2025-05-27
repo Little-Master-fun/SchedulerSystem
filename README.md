@@ -1,12 +1,12 @@
-# ma-ya-ma
+# Scheduler System
 
 C++ 大作业
 
-Github Repo: [lnkkerst/ma-ya-ma-tauri](https://github.com/lnkkerst/ma-ya-ma-tauri)
+Github Repo: [littlemasterfun/SchedulerSystem](https://github.com/Little-Master-fun/SchedulerSystem)
 
 ## Release
 
-可在 [release](https://github.com/lnkkerst/ma-ya-ma-tauri/releases) 页面找到已经构建出来的版本。
+可在 [release](https://github.com/Little-Master-fun/SchedulerSystem/releases/tag/v1.2.6) 页面找到已经构建出来的版本。
 
 ## 构建
 
@@ -21,9 +21,9 @@ git clone https://github.com/lnkkerst/ma-ya-ma-tauri.git && cd ma-ya-ma-tauri
 pnpm i
 ```
 
-### 使用 CMake
+### 使用 XMake
 
-需要事先安装好 CMake。
+需要事先安装好 XMake。
 
 还有 cxxbridge。
 
@@ -41,7 +41,7 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 cmake --build . --config Release
 ```
 
-生成的产物（可执行二进制文件）为 `ma-ya-ma[.exe]`。
+生成的产物（可执行二进制文件）为 `app[.exe]`。
 
 ### 使用 Cargo
 
